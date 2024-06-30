@@ -56,6 +56,37 @@
     .Time {
         margin-right: 500px;
     }
+    .valueContainer {
+        display: flex;
+        flex-direction: column; /* Elemente untereinander anordnen */
+        align-items: center;
+        justify-content: center;
+    }
+
+    .valueRow {
+        display: flex;
+        flex-direction: row; /* Elemente nebeneinander anordnen */
+        justify-content: space-between; /* Platz zwischen den Elementen verteilen */
+        margin-bottom: 10px; /* Unteren Rand hinzufügen, um Platz zwischen den Reihen zu schaffen */
+        width: 100%; /* Stellen Sie sicher, dass die Reihe die volle Breite einnimmt */
+    }
+
+    .textItem {
+        /* Ihr CSS für Textelemente hier */
+        text-align: left; /* Text links ausrichten */
+    }
+
+    .timeItem {
+        /* Ihr CSS für Zeitelemente hier */
+        text-align: center; /* Text zentrieren */
+        margin-left: -270px;
+    }
+
+    .mistakesItem {
+        /* Ihr CSS für Fehlerelemente hier */
+        text-align: right;
+        margin-right: 235px;
+    }
 </style>
 <body>
     <div>
@@ -68,23 +99,44 @@
             <div>
                 <span class="text">Text:</span><span class="Time">Time:</span><span>Mistakes:</span>
                 <p></p>
-                    <div id="textValue"></div>
-                    <div id="timeValue"></div>
-                    <div id="mistakesValue"></div>
+                <div id="valuesContainer" class="valueContainer"></div>           
             </div>
         </div>
     </div>
     <script>
 document.addEventListener('DOMContentLoaded', (event) => {
             // Werte aus dem localStorage abrufen
-            var text = localStorage.getItem('text');
-            var time = localStorage.getItem('time');
-            var mistakes = localStorage.getItem('errors');
+            var values = JSON.parse(localStorage.getItem('values')) || [];
 
             // Werte in die HTML-Elemente einfügen
-            document.getElementById('textValue').innerHTML = text;
-            document.getElementById('timeValue').innerHTML = time;
-            document.getElementById('mistakesValue').innerHTML = mistakes;
+            values.forEach((value, index) => {
+                // Erstellen Sie neue Elemente für jeden Wert
+                let textElement = document.createElement('div');
+                let timeElement = document.createElement('div');
+                let mistakesElement = document.createElement('div');
+
+                // Fügen Sie die Werte in die Elemente ein
+                textElement.innerHTML = value.text;
+                timeElement.innerHTML = value.time;
+                mistakesElement.innerHTML = value.errors;
+
+                // Fügen Sie die CSS-Klassen hinzu
+                textElement.classList.add('textItem');
+                timeElement.classList.add('timeItem');
+                mistakesElement.classList.add('mistakesItem');
+
+                // Erstellen Sie ein neues div für die Reihe
+                let rowElement = document.createElement('div');
+                rowElement.classList.add('valueRow');
+
+                // Fügen Sie die Elemente zur Reihe hinzu
+                rowElement.appendChild(textElement);
+                rowElement.appendChild(timeElement);
+                rowElement.appendChild(mistakesElement);
+
+                // Fügen Sie die Reihe zum Dokument hinzu
+                document.getElementById('valuesContainer').appendChild(rowElement);
+            });
         });
     </script>
 </body>

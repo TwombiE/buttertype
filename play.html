@@ -138,9 +138,7 @@
     </div>
     <div class="wrapper rainbow-text">
         <h1 class="rainbow-text">Your Text to type:</h1>
-        <div class="rainbow-text" id="called-text">
-            Hello, how do you feel today?
-        </div>
+        <div class="rainbow-text" id="called-text"></div>
         <input id="written-text" class="input-box" type="text" placeholder="Type the text in here...">
         <div class="send-container">
             <a onclick="send()">
@@ -189,51 +187,67 @@ function next() {
     }
 }
 
-        function send() {
-            let send_text = document.getElementById('written-text').value.trim().split('');
-            const called_text = document.getElementById('called-text').textContent.trim().split('');
+function send() {
+    // Text, den der Benutzer eingegeben hat
+    let send_text = document.getElementById('written-text').value.trim().split('');
+    // Text, den der Benutzer tippen sollte
+    const called_text = document.getElementById('called-text').textContent.trim().split('');
 
-            let error_app = false;
+    let error_app = false;
 
-            let marked_text = '';
-            let error_count = 0;
-            for (let i = 0; i < called_text.length; i++) {
-                if (send_text[i] !== called_text[i]) {
-                    if (send_text[i+1] === called_text[i]) {
-                        // Ein zusätzlicher Buchstabe wurde eingefügt
-                        marked_text += `<span style="color: red;">${send_text[i]}</span>`;
-                        send_text.splice(i, 1);
-                        error_count++;
-                    } else if (i < send_text.length) {
-                        // Ein Buchstabe ist falsch
-                        marked_text += `<span style="color: red;">${called_text[i]}</span>`;
-                        send_text.splice(i, 0, called_text[i]);
-                        error_count++;
-                        error_app = true;
-                    } else if (i === send_text.length) {
-                        // Ein Buchstabe fehlt am Ende
-                        marked_text += `<span style="color: red;">${called_text[i]}</span>`;
-                        error_count++;
-                    }
-                } else {
-                    marked_text += called_text[i];
-                }
+    let marked_text = '';
+    let error_count = 0;
+    for (let i = 0; i < called_text.length; i++) {
+        if (send_text[i] !== called_text[i]) {
+            if (send_text[i+1] === called_text[i]) {
+                // Ein zusätzlicher Buchstabe wurde eingefügt
+                marked_text += `<span style="color: red;">${send_text[i]}</span>`;
+                send_text.splice(i, 1);
+                error_count++;
+            } else if (i < send_text.length) {
+                // Ein Buchstabe ist falsch
+                marked_text += `<span style="color: red;">${called_text[i]}</span>`;
+                send_text.splice(i, 0, called_text[i]);
+                error_count++;
+                error_app = true;
+            } else if (i === send_text.length) {
+                // Ein Buchstabe fehlt am Ende
+                marked_text += `<span style="color: red;">${called_text[i]}</span>`;
+                error_count++;
             }
+        } else {
+            marked_text += called_text[i];
+        }
+    }
 
-            if(error_app === true) {
-                error_count--;
-                error_app = false;
-            }
+    if(error_app === true) {
+        error_count--;
+        error_app = false;
+    }
 
-            document.getElementById('called-text').innerHTML = marked_text;
-            document.getElementById('errors').innerHTML = error_count;
-            
-            if(status === "started") {
+    document.getElementById('called-text').innerHTML = marked_text;
+    document.getElementById('errors').innerHTML = error_count;
+    
+    if(status === "started") {
         window.clearInterval(interval);
         status = "stopped";
     }
 
-        }
+    // Werte abrufen
+    let text = document.getElementById('called-text').textContent;
+    let time = document.getElementById('stopuhr').innerHTML;
+    let errors = document.getElementById('errors').innerHTML;
+
+    // Alte Werte aus dem localStorage abrufen
+    let oldValues = JSON.parse(localStorage.getItem('values')) || [];
+
+    // Neue Werte hinzufügen
+    oldValues.push({ text, time, errors });
+
+    // Werte im localStorage speichern
+    localStorage.setItem('values', JSON.stringify(oldValues));
+}
+
 
         function stopuhrFunktion() {
     sekunden++;
@@ -254,6 +268,19 @@ function next() {
 
     document.getElementById("stopuhr").innerHTML = displayStunden + ":" + displayMinuten + ":" + displaySekunden;
 }
+
+    let text = document.getElementById('called-text').textContent;
+    let time = document.getElementById('stopuhr').innerHTML;
+    let errors = document.getElementById('errors').innerHTML;
+
+    // Alte Werte aus dem localStorage abrufen
+    let oldValues = JSON.parse(localStorage.getItem('values')) || [];
+
+    // Neue Werte hinzufügen
+    oldValues.push({ text, time, errors });
+
+    // Werte im localStorage speichern
+    localStorage.setItem('values', JSON.stringify(oldValues));
     </script>
 </body>
 </html>
