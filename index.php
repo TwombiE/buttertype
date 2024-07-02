@@ -121,7 +121,12 @@ session_start();
       </nav>
 
     <div class="container">
-        
+    <div>
+        <div class="wrapper">
+            <h1><a href="./play.html" class="rainbow-text wrapper-text">Play</a></h1>
+            <div class="rainbow-text">This is a game to find out: How fast and with how much mistakes you can type a simple text. </div>
+        </div>
+      </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
